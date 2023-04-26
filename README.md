@@ -1,2 +1,2 @@
 # phostr
-Nostr client in PHP
+PHP nostr client
