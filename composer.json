@@ -1,0 +1,15 @@
+{
+
+	"autoload":{
+		"psr-4":{
+		
+			"Phostr\\" : "src/"
+		}
+	},
+	"require": {
+		"textalk/websocket": "^1.6",
+		"simplito/elliptic-php": "^1.0",
+		"public-square/phpecc": "^0.1.2",
+		"bitwasp/bech32": "^0.0.1"
+	}
+}
