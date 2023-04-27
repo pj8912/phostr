@@ -10,28 +10,26 @@ use function BitWasp\Bech32\decode;
 use function BitWasp\Bech32\encode;
 use Mdanter\Ecc\Crypto\Signature\SchnorrSignature;
 
-//for key generation and conversions from hex-beche32 and vice-versa
+class Key
+{
 
-class Key{
-	
+    public function generatePrivateKey(): string
+    {
+        $ec = new EC('secp256k1');
+        $key = $ec->genKeyPair();
+        return $key->priv->toString('hex');
+    }
 
+    public function getPublicKey(string $private_hex): string
+    {
 
-	public function generatePrivateKey():string{
-		$ec = new EC('secp256k1');
-		$key = $ec->genKeyPair();
-		return $key->priv->toString('hex');
-	}
+        $ec = new EC('secp256k1');
+        $private_key = $ec->keyFromPrivate($private_hex);
+        $public_hex = $private_key->getPublic(true, 'hex');
+        return substr($public_hex, 2);
+    }
 
-	public function getPublicKey(string $private_hex):string{
-
-		$ec = new EC('secp256K1');
-		$private_key = $ec->keyFromPrivate($private_hex);
-		//public key in hex
-		$public_hex = $private_hex->getPublic(true, 'hex');
-		return substr($public_hex,2);
-	}
-	
-	public function convertPublicKeyToBech32(string $key): string
+    public function convertPublicKeyToBech32(string $key): string
     {
         return $this->convertToBech32($key, 'npub');
     }
@@ -71,13 +69,27 @@ class Key{
         }
     }
 
+    public function convertToHex(string $key): string
+    {
+        $str = '';
+        try {
+            $decoded = decode($key);
+            $data = $decoded[1];
+            $bytes = convertBits($data, count($data), 5, 8, FALSE);
+            foreach ($bytes as $item)
+            {
+                $str .= str_pad(dechex($item), 2, '0', STR_PAD_LEFT);
+            }
+        }
+        catch (Bech32Exception) {}
+
+        return $str;
+    }
+
     public function serializeEvent($event): bool|string
     {
         $arr = [];
         return json_encode($arr, JSON_UNESCAPED_SLASHES);
     }
-	
-
-	
 }
 
