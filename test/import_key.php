@@ -14,6 +14,6 @@ $keys = [
     'privatekey' => $input_key
 ];
 exit(json_encode($keys));
- 
+
 // $pr_key = $key->generatePrivateKey();
 // $pub_key = $key->getPublicKey($pr_key);
